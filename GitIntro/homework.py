@@ -20,4 +20,3 @@ def calculate_rooms_number(data: List[List[int]]) -> int:
         calculate_rooms_number([[1, 2], [3, 4], [1, 5], [6, 7]])
         >>> 2
     """
-    pass
