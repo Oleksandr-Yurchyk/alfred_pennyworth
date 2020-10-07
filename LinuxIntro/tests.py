@@ -31,3 +31,7 @@ class TestCalculateShips(unittest.TestCase):
                   [1, 0, 0],
                   [0, 0, 1]]
         self.assertEqual(calculate_ships(matrix), 2)
+
+
+if __name__ == "__main__":
+    unittest.main()

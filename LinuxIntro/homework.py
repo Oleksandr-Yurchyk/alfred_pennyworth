@@ -43,5 +43,4 @@ def calculate_ships(data: List[List[int]]):
                 count_of_ships += 1
                 data[i][j] = 0
                 continue
-
     return count_of_ships
