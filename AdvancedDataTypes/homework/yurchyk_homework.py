@@ -29,7 +29,7 @@ def task_2_remove_dict_fields(data: DT, redundant_keys: List[str]) -> DT:
     # for student in data:
     #     for i in range(len(redundant_keys)):
     #         student.pop(redundant_keys[i])
-    #     # del student[redundant_keys[i]]
+    #         del student[redundant_keys[i]]
     #     lst.append(student)
     # return lst
 
@@ -46,7 +46,7 @@ def task_3_find_item_via_value(data: DT, value) -> DT:
     # return lst
 
 
-def task_4_return_lambda_sum_2_ints() -> DT:
+def task_4_return_lambda_sum_2_ints():          # I think this func don`t need  '-> DT'
     return lambda x, y: x + y
 
 
@@ -64,7 +64,4 @@ def task_7_insert_2_vars_into_string(age: float, habit: str):
     age = int(age * 10) / 10
     if len(habit) > 10:
         habit = habit[0:10]
-        str_1 = f"I have {age} years and I love {habit}"
-    else:
-        str_1 = f"I have {age} years and I love {habit:10}"
-    return str_1
+    return f"I have {age} years and I love {habit:10}"
