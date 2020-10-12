@@ -11,7 +11,7 @@ def task_1_fix_names_start_letter(data: DT) -> DT:
     lst = []
     for student in data:
         if student.get('name') is not None:
-            student['name'] = student['name'][0].upper() + student['name'][1:]
+            student['name'] = student['name'].capitalize()
         lst.append(student)
     return lst
 
