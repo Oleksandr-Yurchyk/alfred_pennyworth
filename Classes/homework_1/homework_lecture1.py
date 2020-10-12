@@ -36,8 +36,7 @@ class PersonWithLimitedSkills:
     Make class which is limited to 2 actions - eat and sleep
     Any other attributes addition should result in an error.
     """
-    eat = None
-    sleep = None
+    __slots__ = ['eat', 'sleep']
 
 
 class HiddenAttrs:
