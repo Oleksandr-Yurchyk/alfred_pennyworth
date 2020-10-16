@@ -1,5 +1,5 @@
 import unittest
-import homework_lecture1
+from Classes.homework_1 import homework_lecture1
 
 
 class MagicMethodsTestCases(unittest.TestCase):
