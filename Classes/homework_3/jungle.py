@@ -1,16 +1,17 @@
 from __future__ import annotations
-
+import csv
 import time
 import uuid
 import random
 from abc import ABC, abstractmethod
+from pprint import pprint
 from typing import Dict, Any, List
 
 
 class Animal(ABC):
 
     def __init__(self, power: int, speed: int):
-        self.id = str(uuid.uuid1())
+        self.id = str(uuid.uuid4())
         self.max_power = power
         self._current_power = power
         self.speed = speed
@@ -27,7 +28,7 @@ class Animal(ABC):
             self._current_power = power
 
     @abstractmethod
-    def eat(self, jungle_1: Jungle):
+    def eat(self, jungle: Jungle):
         raise NotImplementedError
 
 
@@ -68,6 +69,7 @@ class Herbivorous(Animal):
             print("Herbivorous eat")
             self._current_power = int(self._current_power)
         return self._current_power
+
 
 # AnyAnimal = Any[Herbivorous, Predator]  # Have no idea what to do with it
 
@@ -118,6 +120,23 @@ class Jungle:
         return True
 
 
+def obj_info():
+    lst = []
+    for id, obj in jungle.animals.items():
+        list_animals = [f"{obj.__class__.__name__}", f"{obj.max_power}", f"{obj.speed}", f"{obj.id}"]
+        lst.append(list_animals)
+    pprint(lst)
+    return lst
+
+
+def convert_to_csv():
+    print("Wrote info about animal in separate file")
+    with open("animal_in.csv", "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(['class', 'power', 'speed', 'id'])
+        writer.writerows(obj_info())
+
+
 def animal_generator(list_of_animals: List[AnyAnimal]):  # Not sure it works properly
     for an in list_of_animals:
         yield an
@@ -145,17 +164,11 @@ if __name__ == "__main__":
 
     # Creating animal generator
     animal_gen = animal_generator(animal_list)
-
-    #         Witch for loop is better ?          #
+    # Add animals to jungle
     for i in animal_gen:
         jungle.add_animal(i)
 
-    # for i in range(10):
-    #     some_animal = next(animal_gen)
-    #     jungle.add_animal(some_animal)
-
-    for id, obj in jungle.animals.items():
-        print(f"{obj.__class__} power: '{obj.max_power}', Animal speed: '{obj.speed}', id: {id}")
+    convert_to_csv()
 
     # while True:
     for animal in jungle:
