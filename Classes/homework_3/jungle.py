@@ -63,11 +63,10 @@ class Herbivorous(Animal):
     def eat(self, jungle: Jungle):
         if self.current_power <= 0:
             jungle.remove_animal(self)
-
-        self.current_power *= 1.4
-        print("Herbivorous eat")
-        self._current_power = int(self._current_power)
-
+        else:
+            self.current_power *= 1.4
+            print("Herbivorous eat")
+            self._current_power = int(self._current_power)
         return self._current_power
 
 # AnyAnimal = Any[Herbivorous, Predator]  # Have no idea what to do with it
