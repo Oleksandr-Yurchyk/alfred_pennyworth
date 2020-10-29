@@ -165,10 +165,14 @@ if __name__ == "__main__":
     # Creating animal generator
     animal_gen = animal_generator(animal_list)
     # Add animals to jungle
-    for i in animal_gen:
-        jungle.add_animal(i)
+    for i in range(4):
+        animal = next(animal_gen)
+        jungle.add_animal(animal)
 
-    convert_to_csv()
+    # for i in animal_gen:
+    #     jungle.add_animal(i)
+
+    # convert_to_csv()
 
     # while True:
     for animal in jungle:
