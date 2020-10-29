@@ -41,21 +41,29 @@ class Predator(Animal):
 
         rand_animal = random.choice(list(jungle.animals.values()))
         if self.id == rand_animal.id:
+            print("Predator`s power before he catch himself", self._current_power)
             print("Predator catch himself")
             self.current_power *= 0.7
             self.current_power = int(self.current_power)
+            print("Predator`s power after he catch himself", self._current_power)
         else:
             if self.speed > rand_animal.speed and self.current_power > rand_animal.current_power:
                 jungle.remove_animal(rand_animal)
                 print(f"Predator ate {rand_animal.__class__}")
+                print("His power increase by 40 %, was -->", self._current_power)
                 self.current_power *= 1.4  # Here i use + 40 %
                 self._current_power = int(self._current_power)
+                print("Became -->", self._current_power)
             else:
+                print("Predator`s power -->", self._current_power)
                 self.current_power *= 0.7
                 self._current_power = int(self._current_power)
+                print("Predator`s power -->", self._current_power)
                 print("Predator did`nt catch anyone")
+                print("Victim`s power -->", rand_animal.current_power)
                 rand_animal.current_power *= 0.7
                 rand_animal.current_power = int(rand_animal.current_power)
+                print("Victim`s power -->", rand_animal.current_power)
         return self._current_power
 
 
@@ -65,9 +73,10 @@ class Herbivorous(Animal):
         if self.current_power <= 0:
             jungle.remove_animal(self)
         else:
+            print("Herbivorous power was", self._current_power)
             self.current_power *= 1.4
-            print("Herbivorous eat")
             self._current_power = int(self._current_power)
+            print("Herbivorous power became", self._current_power)
         return self._current_power
 
 
@@ -120,7 +129,7 @@ class Jungle:
         return True
 
 
-def obj_info():
+def object_info():
     lst = []
     for id, obj in jungle.animals.items():
         list_animals = [f"{obj.__class__.__name__}", f"{obj.max_power}", f"{obj.speed}", f"{obj.id}"]
@@ -130,11 +139,11 @@ def obj_info():
 
 
 def convert_to_csv():
-    print("Wrote info about animal in separate file")
     with open("animal_in.csv", "w") as file:
         writer = csv.writer(file)
         writer.writerow(['class', 'power', 'speed', 'id'])
-        writer.writerows(obj_info())
+        writer.writerows(object_info())
+    print("Wrote info about animal in separate file")
 
 
 def animal_generator(list_of_animals: List[AnyAnimal]):  # Not sure it works properly
@@ -172,9 +181,9 @@ if __name__ == "__main__":
     # for i in animal_gen:
     #     jungle.add_animal(i)
 
-    # convert_to_csv()
+    convert_to_csv()
+    object_info()
 
-    # while True:
     for animal in jungle:
         if jungle.check_if_all_predators_die():
             print("All Predators died")
@@ -182,3 +191,5 @@ if __name__ == "__main__":
             break
         animal.eat(jungle=jungle)
         time.sleep(0.5)
+
+    object_info()
