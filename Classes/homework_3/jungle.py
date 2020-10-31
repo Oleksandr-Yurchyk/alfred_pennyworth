@@ -1,11 +1,10 @@
 from __future__ import annotations
 import csv
-import time
 import uuid
-import random
+from random import randint, choice
 from abc import ABC, abstractmethod
 from pprint import pprint
-from typing import Dict, Any, List
+from typing import Dict
 
 
 class Animal(ABC):
@@ -31,102 +30,73 @@ class Animal(ABC):
     def eat(self, jungle: Jungle):
         raise NotImplementedError
 
+    def has_not_power_to_search_food(self):
+        return self.current_power <= 0
+
+    def loss_power(self):
+        self.current_power -= int(self.max_power * 0.3)
+
+    def gain_power(self):
+        self.current_power += int(self.max_power * 0.4)
+
 
 class Predator(Animal):
 
     def eat(self, jungle: Jungle):
-        if self.current_power <= 0:
+        if self.has_not_power_to_search_food():
             jungle.remove_animal(self)
-            return self._current_power
+            return
 
-        rand_animal = random.choice(list(jungle.animals.values()))
+        rand_animal = choice(list(jungle.animals.values()))
         if self.id == rand_animal.id:
-            print("Predator`s power before he catch himself", self._current_power)
             print("Predator catch himself")
-            self.current_power *= 0.7
-            self.current_power = int(self.current_power)
-            print("Predator`s power after he catch himself", self._current_power)
+            self.loss_power()
+            return
+        if self.speed > rand_animal.speed and self.current_power > rand_animal.current_power:
+            print(f"Predator ate --> {rand_animal.__class__.__name__} <--")
+            jungle.remove_animal(rand_animal)
+            print("Predator get 40% power")
+            self.gain_power()
         else:
-            if self.speed > rand_animal.speed and self.current_power > rand_animal.current_power:
-                jungle.remove_animal(rand_animal)
-                print(f"Predator ate {rand_animal.__class__}")
-                print("His power increase by 40 %, was -->", self._current_power)
-                self.current_power *= 1.4  # Here i use + 40 %
-                self._current_power = int(self._current_power)
-                print("Became -->", self._current_power)
-            else:
-                print("Predator`s power -->", self._current_power)
-                self.current_power *= 0.7
-                self._current_power = int(self._current_power)
-                print("Predator`s power -->", self._current_power)
-                print("Predator did`nt catch anyone")
-                print("Victim`s power -->", rand_animal.current_power)
-                rand_animal.current_power *= 0.7
-                rand_animal.current_power = int(rand_animal.current_power)
-                print("Victim`s power -->", rand_animal.current_power)
-        return self._current_power
+            print("Predator did`nt catch anyone")
+            self.loss_power()
+            rand_animal.loss_power()
 
 
 class Herbivorous(Animal):
 
     def eat(self, jungle: Jungle):
-        if self.current_power <= 0:
+        if self.has_not_power_to_search_food():
             jungle.remove_animal(self)
         else:
-            print("Herbivorous power was", self._current_power)
-            self.current_power *= 1.4
-            self._current_power = int(self._current_power)
-            print("Herbivorous power became", self._current_power)
-        return self._current_power
-
-
-# AnyAnimal = Any[Herbivorous, Predator]  # Have no idea what to do with it
+            print("Herbivorous get 40% power")
+            self.gain_power()
 
 
 class Jungle:
 
     def __init__(self):
-        self.animals: Dict[str, AnyAnimal] = dict()
+        self.animals: Dict[str, Animal] = dict()
+        self.number = -1
 
-    index = 0
-    copy_of_dict = {}
+    def __getitem__(self, item):
+        length = len(self.animals)
+        if self.number >= length - 1:
+            self.number = -1
+            raise StopIteration
+        self.number += 1
+        return list(self.animals.values())[self.number]
 
-    def __next__(self):
-        if self.copy_of_dict == {}:
-            self.copy_of_dict = self.animals.copy()
-
-        self.index = len(self.copy_of_dict.values())
-        while self.copy_of_dict.values():  # if jungle.animals != 0
-            for ident, obj in self.copy_of_dict.items():
-                if self.index > 0:
-                    self.copy_of_dict.pop(ident)
-                    self.index -= 1
-                    return obj
-        raise StopIteration
-
-        # Shows first elem from animal n-times
-        # while self.index < len(self.animals.values()):
-        #     for obj in list(self.animals.values()):
-        #         self.index += 1
-        #         return obj
-        # raise StopIteration
-
-    def __iter__(self):
-        return self
-
-    def add_animal(self, animal: AnyAnimal):
+    def add_animal(self, animal: Animal):
         self.animals[animal.id] = animal
-        return self.animals
 
-    def remove_animal(self, animal: AnyAnimal):
+    def remove_animal(self, animal: Animal):
         self.animals.pop(animal.id)
-        return self.animals
 
-    def check_if_all_predators_die(self):
-        for obj in self.animals.values():
-            if isinstance(obj, Predator):
-                return False
-        return True
+    def any_predator_left(self):
+        if any(isinstance(obj, Predator) for obj in self.animals.values()):
+            return True
+        return False
 
 
 def object_info():
@@ -146,50 +116,35 @@ def convert_to_csv():
     print("Wrote info about animal in separate file")
 
 
-def animal_generator(list_of_animals: List[AnyAnimal]):  # Not sure it works properly
-    for an in list_of_animals:
-        yield an
+def animal_generator():
+    while True:
+        if randint(0, 1) == 0:
+            yield Predator(power=randint(20, 100), speed=randint(20, 100))
+        else:
+            yield Herbivorous(power=randint(20, 100), speed=randint(20, 100))
 
 
 if __name__ == "__main__":
-    # Create jungle
-    # Create few animals
-    # Add animals to jungle
-    # Iterate throw jungle and force animals to eat until no predators left
-    # animal_generator to create a random animal
-
     jungle = Jungle()
 
-    # Creating our instances of animals
-    animal_list = []
-    for i in range(4):
-        rand_int = random.randint(0, 1)
-        if rand_int == 0:
-            animal_list.append(Predator(random.randint(20, 100), random.randint(20, 100)))
-        else:
-            animal_list.append(Herbivorous(random.randint(20, 100), random.randint(20, 100)))
-
-    AnyAnimal = any(animal_list)
-
     # Creating animal generator
-    animal_gen = animal_generator(animal_list)
+    animal_gen = animal_generator()
+
     # Add animals to jungle
-    for i in range(4):
-        animal = next(animal_gen)
-        jungle.add_animal(animal)
+    for i in range(10):
+        jungle.add_animal(next(animal_gen))
 
-    # for i in animal_gen:
-    #     jungle.add_animal(i)
-
+    # Converting animals to animal_in.csv
     convert_to_csv()
-    object_info()
 
-    for animal in jungle:
-        if jungle.check_if_all_predators_die():
+    # object_info()
+
+    while True:
+        if not jungle.any_predator_left():
             print("All Predators died")
             print("Game Over")
             break
-        animal.eat(jungle=jungle)
-        time.sleep(0.5)
+        for animal in jungle:
+            animal.eat(jungle=jungle)
 
     object_info()
