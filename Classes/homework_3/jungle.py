@@ -1,10 +1,21 @@
 from __future__ import annotations
 import csv
+import logging
 import uuid
 from random import randint, choice
 from abc import ABC, abstractmethod
 from pprint import pprint
 from typing import Dict
+
+logger = logging.getLogger("Jungle_logger")
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d %b %y, %H:%M:%S')
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+
+logger.addHandler(stream_handler)
 
 
 class Animal(ABC):
@@ -49,16 +60,16 @@ class Predator(Animal):
 
         rand_animal = choice(list(jungle.animals.values()))
         if self.id == rand_animal.id:
-            print("Predator catch himself")
+            logger.info("Predator catch himself")
             self.loss_power()
             return
         if self.speed > rand_animal.speed and self.current_power > rand_animal.current_power:
-            print(f"Predator ate --> {rand_animal.__class__.__name__} <--")
+            logger.info(f"Predator ate --> {rand_animal.__class__.__name__} <--")
             jungle.remove_animal(rand_animal)
-            print("Predator get 40% power")
+            logger.info("Predator get 40% power")
             self.gain_power()
         else:
-            print("Predator did`nt catch anyone")
+            logger.info("Predator did`nt catch anyone")
             self.loss_power()
             rand_animal.loss_power()
 
@@ -69,7 +80,7 @@ class Herbivorous(Animal):
         if self.has_not_power_to_search_food():
             jungle.remove_animal(self)
         else:
-            print("Herbivorous get 40% power")
+            logger.info("Herbivorous get 40% power")
             self.gain_power()
 
 
@@ -102,7 +113,7 @@ class Jungle:
 def object_info():
     lst = []
     for id, obj in jungle.animals.items():
-        list_animals = [f"{obj.__class__.__name__}", f"{obj.max_power}", f"{obj.speed}", f"{obj.id}"]
+        list_animals = [f"{obj.__class__.__name__:11}", f"{obj.max_power}", f"{obj.speed}", f"{obj.id}"]
         lst.append(list_animals)
     pprint(lst)
     return lst
@@ -141,10 +152,10 @@ if __name__ == "__main__":
 
     while True:
         if not jungle.any_predator_left():
-            print("All Predators died")
-            print("Game Over")
+            logger.info("All Predators died")
+            logger.info("--------- Game Over ---------")
             break
         for animal in jungle:
             animal.eat(jungle=jungle)
 
-    object_info()
+    # object_info()
