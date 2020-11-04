@@ -1,5 +1,5 @@
 import unittest
-import homework
+from LoggingAndExceptions.homework import homework
 
 
 class TestCases(unittest.TestCase):
