@@ -1,3 +1,6 @@
+import logging
+
+
 # 1. double_result
 # This decorator function should return the result of another function multiplied by two
 def double_result(func):
@@ -30,14 +33,11 @@ print('This is func with @double_result add(5, 5) -->', add(5, 5))  # Should ret
 def only_even_parameters(func):
     # if args passed to func are not even - return "Please only use even numbers!"
     def inner(*args, **kwargs):
-        count = 0
         for i in args:
-            if i % 2 == 0:
-                count += 1
-                if count == len(args):
-                    return func(*args, **kwargs)
-            else:
+            if i % 2 != 0:
                 return "Please only use even numbers"
+            else:
+                return func(*args, **kwargs)
 
     return inner
 
@@ -61,7 +61,6 @@ print('This is func with @only_even_param multiply(1, 4, 6, 7, 8) --> ',
       multiply(1, 4, 6, 7, 8))  # Should return "Please only use even numbers!"
 print('This is func with @only_even_param multiply(2, 4, 6, 8, 10) --> ',
       multiply(2, 4, 6, 8, 10))  # Should return 3840
-print('--------------------------3. logged-----------------------------')
 
 
 # 3. logged
@@ -70,7 +69,6 @@ print('--------------------------3. logged-----------------------------')
 # and **kwargs and print them both):
 def logged(func):
     # log function arguments and its return value
-    import logging
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d %b %y, %H:%M:%S',
                         level=logging.INFO)
 
@@ -88,6 +86,7 @@ def function(*args):
     return 3 + len(args)
 
 
+print('--------------------------3. logged-----------------------------')
 print('This is func with @logged function(4, 4, 4) --> ', function(4, 4, 4))  # Should return 6
 
 
@@ -98,9 +97,7 @@ print('This is func with @logged function(4, 4, 4) --> ', function(4, 4, 4))  # 
 def type_check(correct_type):
     def type_decorator(func):
         def inner(param):
-            if correct_type == int and type(param) == int:
-                return func(param)
-            elif correct_type == str and type(param) == str:
+            if type(param) == correct_type:
                 return func(param)
             else:
                 return 'Bad Type'
