@@ -11,20 +11,8 @@ def sort_and_print_data(dictionary: dict, title_for_key, title_for_value):
 
 def get_weekday(time_in_sec):
     week_day = gmtime(time_in_sec).tm_wday
-    if week_day == 0:
-        return 'Monday'
-    elif week_day == 1:
-        return "Tuesday"
-    elif week_day == 2:
-        return "Wednesday"
-    elif week_day == 3:
-        return "Thursday"
-    elif week_day == 4:
-        return "Friday"
-    elif week_day == 5:
-        return "Saturday"
-    elif week_day == 6:
-        return "Sunday"
+    days = ['Monday', "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    return days[week_day]
 
 
 if __name__ == "__main__":
