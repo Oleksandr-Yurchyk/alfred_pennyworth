@@ -128,11 +128,9 @@ def convert_to_csv():
 
 
 def animal_generator():
+    animals = [Herbivorous, Predator]
     while True:
-        if randint(0, 1) == 0:
-            yield Predator(power=randint(20, 100), speed=randint(20, 100))
-        else:
-            yield Herbivorous(power=randint(20, 100), speed=randint(20, 100))
+        yield animals[randint(0, len(animals) - 1)](power=randint(20, 100), speed=randint(20, 100))
 
 
 if __name__ == "__main__":
