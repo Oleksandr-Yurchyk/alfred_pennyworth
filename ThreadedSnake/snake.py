@@ -72,7 +72,7 @@ def find_free_fields(snake, max_x, max_y):
 #         if snake.head == food:
 #             snake.append(food)
 #             food = random.choice(find_free_fields(snake, max_x, max_y))
-#
+
 
 def main(screen):
     screen = curses.initscr()
@@ -103,9 +103,9 @@ def main(screen):
             screen.getch()
             break
 
-        screen.refresh()
-        sleep(0.1)
-        screen.clear()
+    sleep(0.3)
+    screen.clear()
+    screen.refresh()
 
 
 # t1 = Thread(target=main)
