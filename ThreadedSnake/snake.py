@@ -103,9 +103,9 @@ def main(screen):
             screen.getch()
             break
 
-    sleep(0.3)
-    screen.clear()
-    screen.refresh()
+        screen.refresh()
+        sleep(0.1)
+        screen.clear()
 
 
 # t1 = Thread(target=main)
