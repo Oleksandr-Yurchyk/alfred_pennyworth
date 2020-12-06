@@ -2,7 +2,7 @@ import asyncio
 
 from aiohttp import ClientSession
 
-from Practise.web_parser.common import REQUEST_HEADERS, input_goods, make_async_request, time_it
+from Practise.web_parser.common import REQUEST_HEADERS, input_goods, make_async_request, time_it, csv_writer_to_file
 from Practise.web_parser.config import PHARMACY_COOKIE
 from Practise.web_parser.parser import parse_html
 
@@ -25,6 +25,8 @@ async def async_parser(goods):
         if resp is None:
             continue
         results.extend(parse_html(resp))
+
+    csv_writer_to_file(results, file_name='async_parser')
     print(f'Done with {len(results)} results')
 
 

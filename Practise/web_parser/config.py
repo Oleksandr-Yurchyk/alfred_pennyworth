@@ -1,4 +1,4 @@
-SITE_URL = 'https://asbam.com.ua'
+SITE_URL = 'https://asbam.com.ua/'
 
 CITY_ID = '2054'
 

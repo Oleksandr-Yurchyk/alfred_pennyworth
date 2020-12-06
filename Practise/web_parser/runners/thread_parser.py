@@ -1,7 +1,7 @@
 import concurrent
 from concurrent.futures.thread import ThreadPoolExecutor
 
-from Practise.web_parser.common import input_goods, make_sync_request, time_it
+from Practise.web_parser.common import input_goods, make_sync_request, time_it, csv_writer_to_file
 from Practise.web_parser.parser import parse_html
 
 
@@ -26,5 +26,6 @@ def run():
             except Exception as exc:
                 print('%r generated an exception: %s' % (good, exc))
 
+    csv_writer_to_file(results, file_name='thread_parser')
     print(f'Done with {len(results)} results')
 

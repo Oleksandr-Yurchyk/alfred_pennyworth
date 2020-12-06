@@ -1,3 +1,4 @@
+import csv
 import functools
 import time
 
@@ -59,3 +60,11 @@ async def make_async_request(search_query: str, session: ClientSession) -> str o
     except Exception as error:
         print(f'Error: {error}. For {search_query}.')
         return None
+
+
+def csv_writer_to_file(results, file_name):
+    with open(f"results_for_'{file_name}'.csv", 'w') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Good', 'Price'])
+        for result in results:
+            writer.writerow(result)

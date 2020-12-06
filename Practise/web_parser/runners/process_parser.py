@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from Practise.web_parser.common import input_goods, make_sync_request, time_it
+from Practise.web_parser.common import input_goods, make_sync_request, time_it, csv_writer_to_file
 from Practise.web_parser.parser import parse_html
 
 
@@ -19,4 +19,6 @@ def run():
         if resp is None:
             continue
         results.extend(parse_html(resp.text))
+
+    csv_writer_to_file(results, file_name='process_parser')
     print(f'Done with {len(results)} results')
