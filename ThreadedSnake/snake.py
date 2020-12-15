@@ -57,24 +57,24 @@ def find_free_fields(snake, max_x, max_y):
     return list(empty_field - set(snake))
 
 
-# def threaded_food():
-#     screen = curses.initscr()
-#
-#     curses.curs_set(0)  # Hides cursor
-#     screen.nodelay(True)  # Allow don`t wait for user input
-#     max_y, max_x = screen.getmaxyx()
-#
-#     snake = Snake()
-#     food = random.choice(find_free_fields(snake, max_x, max_y))
-#
-#     while True:
-#         screen.addch(*food, '*')
-#         if snake.head == food:
-#             snake.append(food)
-#             food = random.choice(find_free_fields(snake, max_x, max_y))
+def threaded_food():
+    screen = curses.initscr()
+
+    curses.curs_set(0)  # Hides cursor
+    screen.nodelay(True)  # Allow don`t wait for user input
+    max_y, max_x = screen.getmaxyx()
+
+    snake = Snake()
+    food = random.choice(find_free_fields(snake, max_x, max_y))
+
+    while True:
+        screen.addch(*food, '*')
+        if snake.head == food:
+            snake.append(food)
+            food = random.choice(find_free_fields(snake, max_x, max_y))
 
 
-def main(screen):
+def main():
     screen = curses.initscr()
 
     curses.curs_set(0)  # Hides cursor
@@ -108,12 +108,12 @@ def main(screen):
         screen.clear()
 
 
-# t1 = Thread(target=main)
-# t1.start()
-# t1.join()
-#
-# t2 = Thread(target=threaded_food)
-# t2.start()
-# t2.join()
+t1 = Thread(target=main)
+t1.start()
+t1.join()
 
-curses.wrapper(main)
+t2 = Thread(target=threaded_food)
+t2.start()
+t2.join()
+
+# curses.wrapper(main)
